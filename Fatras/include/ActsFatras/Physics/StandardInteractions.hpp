@@ -10,10 +10,12 @@
 
 #include "Acts/Definitions/PdgParticle.hpp"
 #include "ActsFatras/Kernel/ContinuousProcess.hpp"
+#include "ActsFatras/Kernel/PointLikeProcess.hpp"
 #include "ActsFatras/Kernel/InteractionList.hpp"
 #include "ActsFatras/Physics/ElectroMagnetic/BetheBloch.hpp"
 #include "ActsFatras/Physics/ElectroMagnetic/BetheHeitler.hpp"
 #include "ActsFatras/Physics/ElectroMagnetic/Scattering.hpp"
+#include "ActsFatras/Physics/ElectroMagnetic/PhotonConversion.hpp"
 #include "ActsFatras/Selectors/KinematicCasts.hpp"
 #include "ActsFatras/Selectors/ParticleSelectors.hpp"
 #include "ActsFatras/Selectors/SelectorHelpers.hpp"
@@ -27,6 +29,8 @@ namespace detail {
 
 /// Select electrons and positrons only.
 using SelectElectronLike = AbsPdgSelector<Acts::PdgParticle::eElectron>;
+/// Select electrons and positrons only.
+using SelectPhotonLike = AbsPdgSelector<Acts::PdgParticle::eGamma>;
 /// Select particles above a minimum absolute momentum.
 using SelectPMin = Min<Casts::P>;
 
@@ -44,6 +48,9 @@ using StandardBetheBloch =
 /// Only applies to electrons and positrons.
 using StandardBetheHeitler =
     ContinuousProcess<BetheHeitler, SelectElectronLike, SelectPMin, SelectPMin>;
+
+using StandardPhotonConversion =
+    PointLikeProcess<PhotonConversion, SelectPhotonLike, SelectPMin, SelectPMin>;
 
 }  // namespace detail
 
@@ -69,4 +76,9 @@ using StandardChargedElectroMagneticInteractions =
 StandardChargedElectroMagneticInteractions
 makeStandardChargedElectroMagneticInteractions(double minimumAbsMomentum);
 
+using StandardNeutralElectroMagneticInteractions =
+    InteractionList<detail::StandardPhotonConversion>;
+
+StandardNeutralElectroMagneticInteractions
+makeStandardNeutralElectroMagneticInteractions(double minimumAbsMomentum);
 }  // namespace ActsFatras
