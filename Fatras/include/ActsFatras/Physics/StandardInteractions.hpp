@@ -82,3 +82,14 @@ using StandardNeutralElectroMagneticInteractions =
 StandardNeutralElectroMagneticInteractions
 makeStandardNeutralElectroMagneticInteractions(double minimumAbsMomentum);
 }  // namespace ActsFatras
+
+inline ActsFatras::StandardNeutralElectroMagneticInteractions
+ActsFatras::makeStandardNeutralElectroMagneticInteractions(
+    double minimumAbsMomentum) {
+  StandardNeutralElectroMagneticInteractions pl;
+  pl.get<detail::StandardPhotonConversion>().selectOutputParticle.valMin =
+      minimumAbsMomentum;
+  pl.get<detail::StandardPhotonConversion>().selectChildParticle.valMin =
+      minimumAbsMomentum;
+  return pl;
+}

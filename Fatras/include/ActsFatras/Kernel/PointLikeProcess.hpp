@@ -64,7 +64,11 @@ struct PointLikeProcess {
   {
     if(!selectInputParticle(particle)) return false;
 
-    physics.run(rng, particle, generatedParticles);
+    std::vector<Particle> children;
+    physics.run(rng, particle, children);
+
+    std::copy_if(std::begin(children), std::end(children),
+                 std::back_inserter(generatedParticles), selectChildParticle);
 
     return !selectOutputParticle(particle);
   }
